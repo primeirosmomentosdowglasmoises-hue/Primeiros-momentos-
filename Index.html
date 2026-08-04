@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="pt-BR" id="mainBody">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Primeiros Momentos - Douglas Moisés | Base GYN</title>
+    <!-- Framework Phaser para os Mini-Jogos -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+    <style>
+        :root {
+            --bg-sky-top: #3a98e9;
+            --bg-sky-bottom: #bce1ff;
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --accent-blue: #0277bd;
+            --accent-baby: #4fc3f7;
+            --accent-gold: #ffb300;
+            --text-main: #1a365d;
+            --text-muted: #4a5568;
+            --danger-red: #e53935;
+            --primary-blue: #0284c7;
+            --dark-blue: #0369a1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-sky-top) 0%, var(--bg-sky-bottom) 100%);
+            color: var(--text-main);
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+            background-attachment: fixed;
+        }
+
+        /* Fundo com Nuvens Parallax Animadas */
+        .clouds-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.75);
+            border-radius: 100px;
+            animation: floatCloud linear infinite;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+        }
+
+        .cloud::before, .cloud::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.75);
+            border-radius: 50%;
+        }
+
+        .c1 { width: 140px; height: 45px; top: 15%; left: -180px; animation-duration: 40s; }
+        .c1::before { width: 60px; height: 60px; top: -30px; left: 20px; }
+        .c1::after { width: 80px; height: 80px; top: -45px; left: 55px; }
+
+        .c2 { width: 200px; height: 70px; top: 55%; left: -250px; animation-duration: 22s; animation-delay: 4s; opacity: 0.9; }
+        .c2::before { width: 90px; height: 90px; top: -45px; left: 35px; }
+        .c2::after { width: 110px; height: 110px; top: -60px; left: 80px; }
+
+        @keyframes floatCloud {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(100vw + 350px)); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        header {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .music-banner {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .music-banner button {
+            background: #ffffff;
+            color: var(--accent-blue);
+            border: none;
+            padding: 8px 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .music-banner p {
+            font-size: 0.75rem;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .status-box {
+            background: linear-gradient(135deg, #fef3c7, #fde047);
+            border-left: 6px solid #d97706;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: bold;
+            color: #78350f;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .counters-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 8px 14px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .counters-bar span {
+            color: var(--accent-blue);
+        }
+
+        section {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 14px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent-blue);
+            padding-left: 8px;
+        }
+
+        .section-header h2 {
+            font-size: 1.05rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .gear-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .intro-text {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-muted);
+        }
+
+        /* Transmissão ao Vivo e Feed */
+        .live-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feed-card {
+            background: #ffffff;
+            border-left: 3px solid var(--accent-blue);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            position: relative;
+        }
+
+        .feed-card .time {
+            font-size: 0.75rem;
+            color: var(--accent-gold);
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+
+        .feed-card p {
+            font-size: 0.85rem;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .feed-card img {
+            width: 100%;
+            max-height: 220px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-top: 6px;
+        }
+
+        /* Painel Admin / Engrenagem */
+        #adminPanel {
+            display: none;
+            background: #e1f5fe;
+            border: 1px dashed var(--accent-blue);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        #adminPanel h4 {
+            font-size: 0.85rem;
+            color: var(--accent-blue);
+            margin-bottom: 6px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        #adminPanel h4:first-child {
+            margin-top: 0;
+        }
+
+        #adminPanel input, #adminPanel textarea {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 8px;
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+        }
+
+        .admin-publish-btn {
+            background: var(--accent-blue);
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            width: 100%;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--danger-red);
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            display: none;
+        }
+
+        .admin-mode .delete-btn {
+            display: inline-block;
+        }
+
+        /* Fliperama Arcade Phaser */
+        .arcade-section {
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 15px;
+            color: white;
+            border: 2px solid var(--primary-blue);
+            box-shadow: 0 0 20px rgba(2, 132, 199, 0.3);
+        }
+
+        .arcade-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
+        }
+
+        .arcade-menu {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .arcade-btn {
+            background: #1e293b;
+            color: #38bdf8;
+            border: 1px solid #38bdf8;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .arcade-btn.active, .arcade-btn:hover {
+            background: var(--primary-blue);
+            color: white;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+
+        #game-container {
+            width: 100%;
+            height: 320px;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .ranking-section {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #334155;
+            color: white;
+            margin-top: 15px;
+        }
+
+        .ranking-section h4 {
+            color: var(--accent-gold);
+            margin-bottom: 8px;
+            font-size: 1rem;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 5px;
+        }
+
+        #ranking-list {
+            list-style: none;
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        #ranking-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 8px;
+            background: #0f172a;
+            border-radius: 4px;
+        }
+
+        /* Mural de Recados */
+        .chat-input-box {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .chat-input-box input, .chat-input-box textarea {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 8px;
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 0.8rem;
+        }
+
+        .chat-submit {
+            background: var(--accent-blue);
+            color: #fff;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.8rem;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .chat-messages {
+            max-height: 150px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .chat-msg {
+            background: #ffffff;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            border-left: 3px solid var(--accent-baby);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            position: relative;
+        }
+
+        .chat-msg strong {
+            color: var(--accent-blue);
+        }
+
+        /* Momentos da Gestação */
+        .timeline-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .moment-card {
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.06);
+            text-align: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+            position: relative;
+        }
+
+        .moment-card img {
+            width: 100%;
+            max-height: 280px;
+            object-fit: cover;
+            background: #eef5fc;
+        }
+
+        .moment-card p {
+            font-size: 0.85rem;
+            padding: 10px;
+            color: var(--text-main);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.85rem;
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Container de Nuvens Animadas em Parallax -->
+    <div class="clouds-container">
+        <div class="cloud c1"></div>
+        <div class="cloud c2"></div>
+    </div>
+
+    <div class="container">
+        
+        <!-- Cabeçalho -->
+        <header>
+            <h1>Primeiros Momentos Douglas Moisés</h1>
+            <p>Seja Bem-Vindo | Base GYN (Versão 7.4)</p>
+        </header>
+
+        <!-- Player de Música -->
+        <div class="music-banner">
+            <button onclick="toggleMusic()" id="musicBtn">🎵 Tocar Trilha Sonora</button>
+            <p>Toque para acompanhar com música suave</p>
+        </div>
+
+        <!-- Status Operacional -->
+        <div class="status-box">
+            <span>🚨</span>
+            <div>
+                <div>STATUS OPERACIONAL: AGUARDANDO A BOLSA ESTOURAR</div>
+                <div style="font-size: 0.85rem; font-weight: normal; margin-top: 3px;">Acompanhe em tempo real os preparativos do nosso herdeiro!</div>
+            </div>
+        </div>
+
+        <!-- Contadores (Zereados para contagem real) -->
+        <div class="counters-bar">
+            <div>🟢 <span id="onlineCount">1</span> online agora</div>
+            <div>👁️ <span id="visitCount">1</span> acessos</div>
+        </div>
+
+        <!-- Boas Vindas -->
+        <section>
+            <h2>Boas-Vindas, Família!</h2>
+            <p class="intro-text">
+                Criamos este espaço para compartilhar cada detalhe da chegada do <strong>Douglas Moisés</strong>, nosso terceiro filho. Muito obrigado a todos que nos apoiaram nos preparativos e na montagem do quartinho!
+            </p>
+        </section>
+
+        <!-- Transmissão ao Vivo -->
+        <section>
+            <div class="section-header">
+                <h2>📡 Transmissão ao Vivo (Parto)</h2>
+                <button class="gear-btn" onclick="requestAdminAccess()" title="Painel do Operador">⚙️</button>
+            </div>
+
+            <div id="adminPanel">
+                <p style="font-size:0.8rem; color:var(--accent-blue); margin-bottom:8px; font-weight:bold;">🔐 Painel Restrito do Operador (Manutenção Visual)</p>
+                
+                <h4>➕ Publicar Card ao Vivo</h4>
+                <textarea id="adminText" rows="2" placeholder="Digite o status / novidade do parto..."></textarea>
+                <input type="text" id="adminImgUrl" placeholder="Link da foto do Card (Opcional)">
+                <button class="admin-publish-btn" onclick="publishLiveCard()">Publicar Card ao Vivo</button>
+
+                <h4 style="margin-top:14px;">➕ Adicionar Momento na Gestação</h4>
+                <input type="text" id="momentDesc" placeholder="Descrição do momento (ex: 2º Ultrassom)">
+                <input type="text" id="momentImgUrl" placeholder="Link da foto do Momento">
+                <button class="admin-publish-btn" onclick="addNewMoment()">Adicionar Momento</button>
+
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;">💡 <i>Dica: Com o painel aberto, botões vermelhos aparecem nos cards para apagá-los com um clique!</i></p>
+            </div>
+
+            <div class="live-feed" id="liveFeedContainer">
+                <div class="feed-card">
+                    <button class="delete-btn" onclick="this.parentElement.remove()">Apagar</button>
+                    <div class="time">Aguardando início dos procedimentos...</div>
+                    <p>Assim que sairmos para o hospital, as atualizações em tempo real aparecerão aqui!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sala de Espera / Fliperama Arcade com Phaser -->
+        <section class="arcade-section">
+            <div class="arcade-header">
+                <h3 id="current-game-title">🕹️ Fliperama da Sala de Espera</h3>
+                <span id="game-score" style="color: var(--accent-gold); font-weight: bold;">Placar: 0</span>
+            </div>
+
+            <div class="arcade-menu">
+                <button class="arcade-btn active" onclick="switchGame('ChupetaEspacial', 'Chupeta Espacial', this)">1. Chupeta</button>
+                <button class="arcade-btn" onclick="switchGame('SuperMarioGYN', 'Mário GYN', this)">2. Mário GYN</button>
+                <button class="arcade-btn" onclick="switchGame('CarrinhoBebe', 'Carrinho de Bebê', this)">3. Carrinho</button>
+                <button class="arcade-btn" onclick="switchGame('TicTacToeTactical', 'Jogo da Velha IA', this)">4. Velha IA</button>
+            </div>
+
+            <div id="game-container">
+                <!-- Canvas do Phaser -->
+            </div>
+
+            <!-- Painel de Records Modulares -->
+            <div class="ranking-section">
+                <h4 id="ranking-title">🏆 Top 10 Melhores: Chupeta Espacial (Base GYN)</h4>
+                <ul id="ranking-list">
+                    <!-- Carregado via Script -->
+                </ul>
+            </div>
+        </section>
+
+        <!-- Mural de Recados (Zerado para receber comentários reais) -->
+        <section>
+            <h2>Mural de Recados</h2>
+            <div class="chat-input-box">
+                <input type="text" id="senderName" placeholder="Seu Nome / Família">
+            </div>
+            <div class="chat-input-box">
+                <textarea id="senderMsg" rows="2" placeholder="Deixe seu recado para o Douglas..."></textarea>
+            </div>
+            <button class="chat-submit" onclick="addMessage()">Enviar Recado</button>
+            
+            <div class="chat-messages" id="chatList">
+                <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 15px;">
+                    Nenhum recado enviado ainda. Seja o primeiro a deixar uma mensagem para o Douglas Moisés!
+                </div>
+            </div>
+        </section>
+
+        <!-- Momentos da Gestação (Feed Vertical) -->
+        <section>
+            <h2>Momentos da Gestação</h2>
+            <div class="timeline-vertical" id="timelineContainer">
+                <div class="moment-card">
+                    <button class="delete-btn" onclick="this.parentElement.remove()">Apagar</button>
+                    <img src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=500&auto=format&fit=crop&q=60" alt="Teste">
+                    <p>O Descobrimento (O Teste Positivo)</p>
+                </div>
+                <div class="moment-card">
+                    <button class="delete-btn" onclick="this.parentElement.remove()">Apagar</button>
+                    <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=500&auto=format&fit=crop&q=60" alt="Ultrassom">
+                    <p>1º Ultrassom Oficial</p>
+                </div>
+                <div class="moment-card">
+                    <button class="delete-btn" onclick="this.parentElement.remove()">Apagar</button>
+                    <img src="https://images.unsplash.com/photo-1555252335-1e2e92c4bbf7?w=500&auto=format&fit=crop&q=60" alt="Barriga">
+                    <p>👶 Reta Final (A preparação do quartinho)</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        Oraculo-Douglas-Moises-v7.4 © 2026 - Base de Operações GYN<br>Developed by Oráculo System
+    </footer>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+    </audio>
+
+    <script>
+        // Lógica de Contadores Reais com localStorage
+        function initCounters() {
+            let visits = localStorage.getItem('oraculo_visit_count');
+            if (!visits) {
+                visits = 1;
+            } else {
+                visits = parseInt(visits) + 1;
+            }
+            localStorage.setItem('oraculo_visit_count', visits);
+            document.getElementById('visitCount').innerText = visits;
+
+            // Simulação dinâmica e limpa para usuários online
+            let online = Math.floor(Math.random() * 3) + 1;
+            document.getElementById('onlineCount').innerText = online;
+        }
+
+        // Funções de Controle Administrativo (Painel do Operador)
+        let isAdminUnlocked = false;
+        function requestAdminAccess() {
+            let panel = document.getElementById('adminPanel');
+            let body = document.getElementById('mainBody');
+            if(isAdminUnlocked) {
+                panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+                body.classList.toggle('admin-mode');
+                return;
+            }
+            let pass = prompt("🔐 Insira o PIN de Acesso do Operador:");
+            if(pass === "1926") {
+                isAdminUnlocked = true;
+                panel.style.display = 'block';
+                body.classList.add('admin-mode');
+                alert("Acesso Liberado, Operador! Botões de apagar ativados.");
+            } else if(pass !== null) {
+                alert("Senha incorreta!");
+            }
+        }
+
+        function publishLiveCard() {
+            let text = document.getElementById('adminText').value.trim();
+            let imgUrl = document.getElementById('adminImgUrl').value.trim();
+            if(!text) return alert("Digite alguma atualização!");
+
+            let now = new Date();
+            let timeString = now.toLocaleDateString('pt-BR') + ' às ' + now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+            let feedContainer = document.getElementById('liveFeedContainer');
+            
+            if(feedContainer.innerHTML.includes("Aguardando início")) {
+                feedContainer.innerHTML = "";
+            }
+
+            let card = document.createElement('div');
+            card.className = 'feed-card';
+            let imgHtml = imgUrl ? `<img src="${imgUrl}" alt="Parto">` : '';
+            card.innerHTML = `
+                <button class="delete-btn" onclick="this.parentElement.remove()">Apagar</button>
+                <div class="time">📡 ${timeString}</div>
+                <p>${text}</p>
+                ${imgHtml}
+            `;
+            feedContainer.prepend(card);
+            document.getElementById('adminText').value = '';
+            document.getElementById('adminImgUrl').value = '';
+            alert("Card ao vivo publicado!");
+        }
+
+        function addNewMoment() {
+            let desc = document.getElementById('momentDesc').value.trim();
+            let imgUrl = document.getElementById('momentImgUrl').value.trim();
+            if(!desc || !imgUrl) return alert("Preencha a descrição e o link da foto!");
+
+            let timeline = document.getElementById('timelineContainer');
+            let card = document.createElement('div');
+            card.className = 'moment-card';
+            card.innerHTML = `
+                <button class="delete-btn" onclick="this.parentElement.remove()">Apagar</button>
+                <img src="${imgUrl}" alt="Momento">
+                <p>${desc}</p>
+            `;
+            timeline.prepend(card);
+            document.getElementById('momentDesc').value = '';
+            document.getElementById('momentImgUrl').value = '';
+            alert("Momento adicionado com sucesso!");
+        }
+
+        let musicPlaying = false;
+        function toggleMusic() {
+            const music = document.getElementById('bgMusic');
+            const btn = document.getElementById('musicBtn');
+            if(!musicPlaying) {
+                music.play().catch(e => console.log(e));
+                btn.innerText = "🔊 Trilha Tocando (Parar)";
+                musicPlaying = true;
+            } else {
+                music.pause();
+                btn.innerText = "🎵 Tocar Trilha Sonora";
+                musicPlaying = false;
+            }
+        }
+
+        function loadStoredMessages() {
+            let msgs = localStorage.getItem('oraculo_chat_messages');
+            return msgs ? JSON.parse(msgs) : [];
+        }
+
+        function saveStoredMessages(msgs) {
+            localStorage.setItem('oraculo_chat_messages', JSON.stringify(msgs));
+        }
+
+        function renderMessages() {
+            let chatList = document.getElementById('chatList');
+            let msgs = loadStoredMessages();
+            
+            if (msgs.length === 0) {
+                chatList.innerHTML = `
+                    <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 15px;">
+                        Nenhum recado enviado ainda. Seja o primeiro a deixar uma mensagem para o Douglas Moisés!
+                    </div>
+                `;
+                return;
+            }
+
+            chatList.innerHTML = '';
+            msgs.forEach((item, index) => {
+                let newDiv = document.createElement('div');
+                newDiv.className = 'chat-msg';
+                newDiv.innerHTML = `
+                    <button class="delete-btn" onclick="deleteMessage(${index})">Apagar</button>
+                    <strong>${item.name}:</strong> ${item.msg}
+                `;
+                chatList.appendChild(newDiv);
+            });
+        }
+
+        function addMessage() {
+            let name = document.getElementById('senderName').value.trim();
+            let msg = document.getElementById('senderMsg').value.trim();
+            if(!name || !msg) return alert('Preencha seu nome e o recado!');
+            
+            let msgs = loadStoredMessages();
+            msgs.unshift({ name: name, msg: msg });
+            saveStoredMessages(msgs);
+            renderMessages();
+
+            document.getElementById('senderName').value = '';
+            document.getElementById('senderMsg').value = '';
+        }
+
+        function deleteMessage(index) {
+            let msgs = loadStoredMessages();
+            msgs.splice(index, 1);
+            saveStoredMessages(msgs);
+            renderMessages();
+        }
+
+        // Lógica Phaser para os Jogos
+        let globalScore = 0;
+        let currentGameKey = 'ChupetaEspacial';
+        let currentGameName = 'Chupeta Espacial';
+
+        function getHighScores(gameKey) {
+            let scores = localStorage.getItem('oraculo_scores_' + gameKey);
+            return scores ? JSON.parse(scores) : [];
+        }
+
+        function saveHighScore(gameKey, score) {
+            if (score <= 0) return;
+            let scores = getHighScores(gameKey);
+            scores.push({ score: score, date: new Date().toLocaleDateString('pt-BR') });
+            scores.sort((a, b) => b.score - a.score);
+            scores = scores.slice(0, 10);
+            localStorage.setItem('oraculo_scores_' + gameKey, JSON.stringify(scores));
+            updateRankingDisplay();
+        }
+
+        function updateRankingDisplay() {
+            let list = document.getElementById('ranking-list');
+            let title = document.getElementById('ranking-title');
+            title.innerText = `🏆 Top 10 Melhores: ${currentGameName} (Base GYN)`;
+
+            let scores = getHighScores(currentGameKey);
+            list.innerHTML = '';
+            if (scores.length === 0) {
+                list.innerHTML = '<li style="justify-content: center; color: #64748b;">Nenhum recorde neste jogo ainda.</li>';
+                return;
+            }
+            scores.forEach((item, index) => {
+                let li = document.createElement('li');
+                li.innerHTML = `<span>#${index + 1} - ${item.date}</span> <strong style="color: var(--accent-gold);">${item.score} pts</strong>`;
+                list.appendChild(li);
+            });
+        }
+
+        function resetGlobalScore() {
+            saveHighScore(currentGameKey, globalScore);
+            globalScore = 0;
+            document.getElementById('game-score').innerText = 'Placar: 0';
+        }
+
+        // JOGO 1: Chupeta Espacial
+        class ChupetaEspacial extends Phaser.Scene {
+            constructor() { super('ChupetaEspacial'); }
+            create() {
+                this.cameras.main.setBackgroundColor('#020617');
+                for (let i = 0; i < 40; i++) {
+                    let sx = Phaser.Math.Between(5, 395);
+                    let sy = Phaser.Math.Between(5, 315);
+                    let alpha = Phaser.Math.FloatBetween(0.3, 0.9);
+                    this.add.circle(sx, sy, 1.2, 0xffffff, alpha);
+                }
+
+                this.add.text(12, 10, '🌌 Espaço GYN: Defesa da Mamadeira', { fill: '#38bdf8', fontSize: '12px', fontStyle: 'bold' });
+                this.scoreText = this.add.text(12, 28, 'Pontos: ' + globalScore, { fill: '#fbbf24', fontSize: '14px', fontStyle: 'bold' });
+                
+                this.baseLives = 5;
+                this.livesText = this.add.text(230, 28, 'Vidas: ❤️❤️❤️❤️❤️', { fill: '#ef4444', fontSize: '12px', fontStyle: 'bold' });
+
+                this.base = this.add.container(200, 295);
+                let bottleBody = this.add.rectangle(0, 0, 22, 32, 0xf8fafc);
+                let bottleCap = this.add.rectangle(0, -18, 14, 6, 0x0284c7);
+                let nipple = this.add.triangle(0, -25, -6, 5, 6, 5, 0, -2, 0xfbbf24);
+                this.base.add([bottleBody, bottleCap, nipple]);
+
+                this.obstacles = [];
+                this.milks = [];
+
+                this.time.addEvent({ delay: 1000, callback: this.spawnObstacle, callbackScope: this, loop: true });
+
+                this.input.on('pointerdown', (pointer) => {
+                    if (!this.scene.isActive('ChupetaEspacial')) return;
+                    this.base.x = Phaser.Math.Clamp(pointer.x, 25, 375);
+                    let milk = this.add.circle(this.base.x, 275, 5, 0xffffff);
+                    this.milks.push(milk);
+                });
+            }
+
+            spawnObstacle() {
+                if (!this.scene.isActive('ChupetaEspacial')) return;
+                let x = Phaser.Math.Between(30, 370);
+                let type = Phaser.Math.Between(0, 1);
+                let container = this.add.container(x, -20);
+                
+                if (type === 0) {
+                    let handle = this.add.circle(0, 8, 8, null).setStrokeStyle(2, 0x38bdf8);
+                    let shield = this.add.rectangle(0, -2, 12, 6, 0x0ea5e9);
+                    let tip = this.add.circle(0, -8, 6, 0xfbbf24);
+                    container.add([handle, shield, tip]);
+                } else {
+                    let stick = this.add.rectangle(0, 10, 4, 16, 0x94a3b8);
+                    let candyBg = this.add.circle(0, -4, 12, 0xef4444);
+                    let spiral = this.add.circle(0, -4, 6, 0xffffff);
+                    container.add([stick, candyBg, spiral]);
+                }
+
+                container.speed = Phaser.Math.FloatBetween(1.1, 1.8);
+                this.obstacles.push(container);
+            }
+
+            update() {
+                if (!this.scene.isActive('ChupetaEspacial')) return;
+
+                for (let i = this.obstacles.length - 1; i >= 0; i--) {
+                    let obs = this.obstacles[i];
+                    obs.y += obs.speed;
+
+                    if (obs.y > 325) {
+                        obs.destroy();
+                        this.obstacles.splice(i, 1);
+                        this.baseLives--;
+                        this.updateLivesDisplay();
+                        this.cameras.main.shake(100, 0.008);
+
+                        if (this.baseLives <= 0) {
+                            this.scoreText.setText('BASE DESTRUÍDA! Salvando...');
+                            this.cameras.main.flash(400, 239, 68, 68);
+                            resetGlobalScore();
+                            this.time.delayedCall(1200, () => this.scene.restart());
+                        }
+                    }
+                }
+
+                for (let b = this.milks.length - 1; b >= 0; b--) {
+                    let milk = this.milks[b];
+                    milk.y -= 8;
+
+                    if (milk.y < 0) {
+                        milk.destroy();
+                        this.milks.splice(b, 1);
+                        continue;
+                    }
+
+                    for (let t = this.obstacles.length - 1; t >= 0; t--) {
+                        let obs = this.obstacles[t];
+                        let distance = Phaser.Math.Distance.Between(milk.x, milk.y, obs.x, obs.y);
+                        
+                        if (distance < 18) {
+                            milk.destroy();
+                            this.milks.splice(b, 1);
+                            
+                            let burst = this.add.circle(obs.x, obs.y, 12, 0xfbbf24);
+                            this.tweens.add({
+                                targets: burst,
+                                scale: 2,
+                                alpha: 0,
+                                duration: 200,
+                                onComplete: () => burst.destroy()
+                            });
+
+                            obs.destroy();
+                            this.obstacles.splice(t, 1);
+                            
+                            globalScore += 15;
+                            this.scoreText.setText('Pontos: ' + globalScore);
+                            document.getElementById('game-score').innerText = 'Placar: ' + globalScore;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            updateLivesDisplay() {
+                let hearts = '❤️'.repeat(this.baseLives) + '🖤'.repeat(5 - this.baseLives);
+                this.livesText.setText('Vidas: ' + hearts);
+            }
+        }
+
+        // JOGO 2: Super Mário GYN
+        class SuperMarioGYN extends Phaser.Scene {
+            constructor() { super('SuperMarioGYN'); }
+            create() {
+                this.cameras.main.setBackgroundColor('#0f172a');
+                this.bgCity = this.add.graphics();
+                this.bgCity.fillStyle(0x1e293b, 1);
+                this.bgCity.fillRect(20, 100, 50, 150);
+                this.bgCity.fillRect(80, 70, 65, 180);
+                this.bgCity.fillRect(160, 120, 45, 130);
+                this.bgCity.fillRect(220, 85, 70, 165);
+                this.bgCity.fillRect(300, 110, 55, 140);
+                this.bgCity.fillRect(360, 60, 40, 190);
+
+                this.add.text(10, 8, '🏙️ Mário GYN - Corrida Infinita', { fill: '#38bdf8', fontSize: '11px', fontStyle: 'bold' });
+                this.scoreText = this.add.text(10, 24, 'Distância: 0m', { fill: '#fbbf24', fontSize: '13px', fontStyle: 'bold' });
+                this.cookieAmmoText = this.add.text(280, 24, '🍪 Cookies: 3', { fill: '#38bdf8', fontSize: '12px', fontStyle: 'bold' });
+
+                this.distance = 0;
+                this.cookiesAmmo = 3;
+                this.isJumping = false;
+                this.isGameOver = false;
+
+                this.groundSegments = [
+                    this.add.rectangle(100, 260, 200, 20, 0x475569),
+                    this.add.rectangle(320, 260, 180, 20, 0x475569),
+                    this.add.rectangle(520, 260, 200, 20, 0x475569)
+                ];
+
+                this.mario = this.add.container(60, 235);
+                let cap = this.add.rectangle(0, -12, 16, 6, 0xef4444);
+                let head = this.add.circle(0, -5, 7, 0xfde047);
+                let body = this.add.rectangle(0, 6, 14, 16, 0x0284c7);
+                this.mario.add([cap, head, body]);
+
+                this.enemies = [];
+                this.cookiesToCollect = [];
+                this.bullets = [];
+
+                this.time.addEvent({ delay: 1800, callback: this.spawnEnemy, callbackScope: this, loop: true });
+                this.time.addEvent({ delay: 2500, callback: this.spawnCookieItem, callbackScope: this, loop: true });
+
+                let btnJump = this.add.rectangle(70, 298, 110, 32, 0x0284c7).setInteractive();
+                this.add.text(45, 290, '🚀 PULAR', { fill: '#ffffff', fontSize: '12px', fontStyle: 'bold' });
+                
+                let btnShoot = this.add.rectangle(330, 298, 110, 32, 0xd97706).setInteractive();
+                this.add.text(300, 290, '🍪 ATIRAR', { fill: '#ffffff', fontSize: '12px', fontStyle: 'bold' });
+
+                btnJump.on('pointerdown', () => this.jump());
+                btnShoot.on('pointerdown', () => this.shoot());
+            }
+
+            jump() {
+                if (!this.isJumping && !this.isGameOver) {
+                    this.isJumping = true;
+                    this.tweens.add({
+                        targets: this.mario,
+                        y: 165,
+                        duration: 320,
+                        yoyo: true,
+                        ease: 'Quad.easeOut',
+                        onComplete: () => { this.isJumping = false; }
+                    });
+                }
+            }
+
+            shoot() {
+                if (this.cookiesAmmo > 0 && !this.isGameOver) {
+                    this.cookiesAmmo--;
+                    this.cookieAmmoText.setText('🍪 Cookies: ' + this.cookiesAmmo);
+                    let cookie = this.add.circle(this.mario.x + 12, this.mario.y, 6, 0xd97706);
+                    let center = this.add.circle(this.mario.x + 12, this.mario.y, 3, 0x78350f);
+                    this.bullets.push({ bg: cookie, center: center });
+                }
+            }
+
+            spawnEnemy() {
+                if (this.isGameOver || !this.scene.isActive('SuperMarioGYN')) return;
+                let type = Phaser.Math.Between(0, 1);
+                let enemy = this.add.container(420, 238);
+
+                if (type === 0) {
+                    let shell = this.add.circle(0, 0, 10, 0x16a34a);
+                    let head = this.add.circle(8, -2, 4, 0xfde047);
+                    enemy.add([shell, head]);
+                } else {
+                    let body = this.add.rectangle(0, 0, 20, 12, 0x78350f);
+                    let shell = this.add.arc(0, -2, 10, 180, 360, false, 0xd97706);
+                    enemy.add([body, shell]);
+                }
+
+                enemy.speed = Phaser.Math.FloatBetween(2.2, 3.2);
+                this.enemies.push(enemy);
+            }
+
+            spawnCookieItem() {
+                if (this.isGameOver || !this.scene.isActive('SuperMarioGYN')) return;
+                let item = this.add.container(420, Phaser.Math.Between(180, 220));
+                let cookieBg = this.add.circle(0, 0, 8, 0xd97706);
+                let dot1 = this.add.circle(-3, -2, 1.5, 0x451a03);
+                let dot2 = this.add.circle(3, 3, 1.5, 0x451a03);
+                item.add([cookieBg, dot1, dot2]);
+                item.speed = 2.0;
+                this.cookiesToCollect.push(item);
+            }
+
+            update() {
+                if (this.isGameOver || !this.scene.isActive('SuperMarioGYN')) return;
+
+                this.distance += 1;
+                globalScore = Math.floor(this.distance / 10);
+                this.scoreText.setText('Distância: ' + globalScore + 'm');
+                document.getElementById('game-score').innerText = 'Placar: ' + globalScore;
+
+                this.groundSegments.forEach(seg => {
+                    seg.x -= 2.2;
+                    if (seg.x < -100) {
+                        seg.x = 450 + Phaser.Math.Between(10, 50);
+                    }
+                });
+
+                let overGround = false;
+                this.groundSegments.forEach(seg => {
+                    if (Math.abs(this.mario.x - seg.x) < (seg.width / 2 + 5)) {
+                        overGround = true;
+                    }
+                });
+
+                if (!overGround && !this.isJumping && this.mario.y >= 235) {
+                    this.gameOver('CAIU NO BURACO!');
+                    return;
+                }
+
+                for (let i = this.enemies.length - 1; i >= 0; i--) {
+                    let enemy = this.enemies[i];
+                    enemy.x -= enemy.speed;
+
+                    if (Phaser.Math.Distance.Between(this.mario.x, this.mario.y, enemy.x, enemy.y) < 18) {
+                        this.gameOver('COLIDIU COM O INIMIGO!');
+                        return;
+                    }
+
+                    if (enemy.x < -20) {
+                        enemy.destroy();
+                        this.enemies.splice(i, 1);
+                    }
+                }
+
+                for (let c = this.cookiesToCollect.length - 1; c >= 0; c--) {
+                    let cookie = this.cookiesToCollect[c];
+                    cookie.x -= cookie.speed;
+
+                    if (Phaser.Math.Distance.Between(this.mario.x, this.mario.y, cookie.x, cookie.y) < 20) {
+                        this.cookiesAmmo += 2;
+                        this.cookieAmmoText.setText('🍪 Cookies: ' + this.cookiesAmmo);
+                        cookie.destroy();
+                        this.cookiesToCollect.splice(c, 1);
+                        continue;
+                    }
+
+                    if (cookie.x < -20) {
+                        cookie.destroy();
+                        this.cookiesToCollect.splice(c, 1);
+                    }
+                }
+
+                for (let b = this.bullets.length - 1; b >= 0; b--) {
+                    let bullet = this.bullets[b];
+                    bullet.bg.x += 6;
+                    bullet.center.x += 6;
+
+                    if (bullet.bg.x > 410) {
+                        bullet.bg.destroy();
+                        bullet.center.destroy();
+                        this.bullets.splice(b, 1);
+                        continue;
+                    }
+
+                    for (let e = this.enemies.length - 1; e >= 0; e--) {
+                        let enemy = this.enemies[e];
+                        if (Phaser.Math.Distance.Between(bullet.bg.x, bullet.bg.y, enemy.x, enemy.y) < 20) {
+                            bullet.bg.destroy();
+                            bullet.center.destroy();
+                            this.bullets.splice(b, 1);
+
+                            let burst = this.add.circle(enemy.x, enemy.y, 14, 0xef4444);
+                            this.tweens.add({ targets: burst, scale: 1.8, alpha: 0, duration: 180, onComplete: () => burst.destroy() });
+
+                            enemy.destroy();
+                            this.enemies.splice(e, 1);
+                            this.distance += 50;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            gameOver(reason) {
+                this.isGameOver = true;
+                this.scoreText.setText('GAME OVER! ' + reason);
+                this.cameras.main.flash(300, 239, 68, 68);
+                resetGlobalScore();
+                this.time.delayedCall(1500, () => this.scene.restart());
+            }
+        }
+
+        // JOGO 3: Carrinho de Bebê GYN
+        class CarrinhoBebe extends Phaser.Scene {
+            constructor() { super('CarrinhoBebe'); }
+            create() {
+                this.cameras.main.setBackgroundColor('#020617');
+                this.add.text(10, 8, '🍼 Carrinho GYN - Desvio de Obstáculos', { fill: '#38bdf8', fontSize: '11px', fontStyle: 'bold' });
+                this.scoreText = this.add.text(10, 24, 'Pontos: 0', { fill: '#fbbf24', fontSize: '13px', fontStyle: 'bold' });
+                this.livesText = this.add.text(260, 24, 'Vidas: ❤️❤️❤️', { fill: '#ef4444', fontSize: '12px', fontStyle: 'bold' });
+
+                this.points = 0;
+                this.lives = 3;
+                this.isGameOver = false;
+
+                this.cart = this.add.container(200, 275);
+                let cartBase = this.add.rectangle(0, 4, 26, 16, 0x38bdf8);
+                let cartCanopy = this.add.arc(-4, -4, 12, 180, 360, false, 0x0284c7);
+                let wheel1 = this.add.circle(-10, 14, 4, 0xffffff);
+                let wheel2 = this.add.circle(10, 14, 4, 0xffffff);
+                this.cart.add([cartBase, cartCanopy, wheel1, wheel2]);
+
+                this.hazards = [];
+                this.bonuses = [];
+
+                this.time.addEvent({ delay: 1100, callback: this.spawnHazard, callbackScope: this, loop: true });
+                this.time.addEvent({ delay: 1400, callback: this.spawnBonus, callbackScope: this, loop: true });
+
+                this.input.on('pointermove', (pointer) => {
+                    if (this.isGameOver || !this.scene.isActive('CarrinhoBebe')) return;
+                    this.cart.x = Phaser.Math.Clamp(pointer.x, 30, 370);
+                });
+            }
+
+            spawnHazard() {
+                if (this.isGameOver || !this.scene.isActive('CarrinhoBebe')) return;
+                let x = Phaser.Math.Between(30, 370);
+                let hazard = this.add.container(x, -20);
+                let type = Phaser.Math.Between(0, 2);
+                if (type === 0) {
+                    let ring = this.add.circle(0, 6, 6, null).setStrokeStyle(2, 0xef4444);
+                    let tip = this.add.circle(0, -4, 5, 0xfbbf24);
+                    hazard.add([ring, tip]);
+                } else if (type === 1) {
+                    let bBody = this.add.rectangle(0, 0, 12, 20, 0xef4444);
+                    hazard.add([bBody]);
+                } else {
+                    let pCandy = this.add.circle(0, 0, 8, 0xef4444);
+                    hazard.add([pCandy]);
+                }
+                hazard.speed = Phaser.Math.FloatBetween(1.8, 2.6);
+                this.hazards.push(hazard);
+            }
+
+            spawnBonus() {
+                if (this.isGameOver || !this.scene.isActive('CarrinhoBebe')) return;
+                let x = Phaser.Math.Between(30, 370);
+                let bonus = this.add.container(x, -20);
+                let bType = Phaser.Math.Between(0, 1);
+                if (bType === 0) {
+                    let bow1 = this.add.triangle(0, 0, -6, -4, -6, 4, 0, 0, 0x38bdf8);
+                    let bow2 = this.add.triangle(0, 0, 6, -4, 6, 4, 0, 0, 0x38bdf8);
+                    let center = this.add.circle(0, 0, 3, 0x0284c7);
+                    bonus.add([bow1, bow2, center]);
+                } else {
+                    let wingL = this.add.circle(-5, 0, 5, 0x38bdf8);
+                    let wingR = this.add.circle(5, 0, 5, 0x38bdf8);
+                    let body = this.add.rectangle(0, 0, 3, 10, 0xfbbf24);
+                    bonus.add([wingL, wingR, body]);
+                }
+                bonus.speed = 2.0;
+                this.bonuses.push(bonus);
+            }
+
+            update() {
+                if (this.isGameOver || !this.scene.isActive('CarrinhoBebe')) return;
+
+                for (let i = this.hazards.length - 1; i >= 0; i--) {
+                    let h = this.hazards[i];
+                    h.y += h.speed;
+
+                    if (Phaser.Math.Distance.Between(this.cart.x, this.cart.y, h.x, h.y) < 22) {
+                        h.destroy();
+                        this.hazards.splice(i, 1);
+                        this.lives--;
+                        this.updateLivesDisplay();
+                        this.cameras.main.shake(120, 0.01);
+
+                        if (this.lives <= 0) {
+                            this.endGame();
+                            return;
+                        }
+                        continue;
+                    }
+
+                    if (h.y > 330) {
+                        h.destroy();
+                        this.hazards.splice(i, 1);
+                        this.points += 5;
+                        globalScore = this.points;
+                        this.scoreText.setText('Pontos: ' + globalScore);
+                        document.getElementById('game-score').innerText = 'Placar: ' + globalScore;
+                    }
+                }
+
+                for (let j = this.bonuses.length - 1; j >= 0; j--) {
+                    let b = this.bonuses[j];
+                    b.y += b.speed;
+
+                    if (Phaser.Math.Distance.Between(this.cart.x, this.cart.y, b.x, b.y) < 22) {
+                        b.destroy();
+                        this.bonuses.splice(j, 1);
+                        this.points += 15;
+                        globalScore = this.points;
+                        this.scoreText.setText('Pontos: ' + globalScore);
+                        document.getElementById('game-score').innerText = 'Placar: ' + globalScore;
+                        continue;
+                    }
+
+                    if (b.y > 330) {
+                        b.destroy();
+                        this.bonuses.splice(j, 1);
+                    }
+                }
+            }
+
+            updateLivesDisplay() {
+                let hearts = '❤️'.repeat(this.lives) + '🖤'.repeat(3 - this.lives);
+                this.livesText.setText('Vidas: ' + hearts);
+            }
+
+            endGame() {
+                this.isGameOver = true;
+                this.scoreText.setText('GAME OVER!');
+                this.cameras.main.flash(400, 239, 68, 68);
+                resetGlobalScore();
+                this.time.delayedCall(1500, () => this.scene.restart());
+            }
+        }
+
+        // JOGO 4: Jogo da Velha Tático (IA)
+        class TicTacToeTactical extends Phaser.Scene {
+            constructor() { super('TicTacToeTactical'); }
+            create() {
+                this.cameras.main.setBackgroundColor('#090d16');
+                this.add.text(12, 10, '🤖 Jogo da Velha: Oracle System vs Operator', { fill: '#38bdf8', fontSize: '11px', fontStyle: 'bold' });
+                this.statusMsg = this.add.text(12, 28, 'Sua vez (🔵 Avançar)', { fill: '#fbbf24', fontSize: '12px', fontStyle: 'bold' });
+
+                this.board = ['', '', '', '', '', '', '', '', ''];
+                this.isGameActive = true;
+                this.playerTurn = true;
+
+                this.startX = 100;
+                this.startY = 60;
+                this.cellSize = 64;
+
+                this.drawBoardGrid();
+                this.createInteractiveCells();
+            }
+
+            drawBoardGrid() {
+                let graphics = this.add.graphics();
+                graphics.lineStyle(3, 0x0284c7, 1);
+
+                graphics.beginPath();
+                graphics.moveTo(this.startX + this.cellSize, this.startY);
+                graphics.lineTo(this.startX + this.cellSize, this.startY + this.cellSize * 3);
+                graphics.moveTo(this.startX + this.cellSize * 2, this.startY);
+                graphics.lineTo(this.startX + this.cellSize * 2, this.startY + this.cellSize * 3);
+
+                graphics.moveTo(this.startX, this.startY + this.cellSize);
+                graphics.lineTo(this.startX + this.cellSize * 3, this.startY + this.cellSize);
+                graphics.moveTo(this.startX, this.startY + this.cellSize * 2);
+                graphics.lineTo(this.startX + this.cellSize * 3, this.startY + this.cellSize * 2);
+                graphics.strokePath();
+            }
+
+            createInteractiveCells() {
+                this.cells = [];
+                for (let i = 0; i < 9; i++) {
+                    let col = i % 3;
+                    let row = Math.floor(i / 3);
+                    let x = this.startX + col * this.cellSize + this.cellSize / 2;
+                    let y = this.startY + row * this.cellSize + this.cellSize / 2;
+
+                    let zone = this.add.zone(x, y, this.cellSize - 6, this.cellSize - 6).setInteractive();
+                    zone.cellIndex = i;
+
+                    zone.on('pointerdown', () => {
+                        if (!this.isGameActive || !this.playerTurn) return;
+                        if (this.board[i] === '') {
+                            this.makeMove(i, 'X');
+                            if (this.checkWin('X')) {
+                                this.endRound('VITÓRIA DO OPERADOR! 🏆', 30);
+                            } else if (this.board.every(cell => cell !== '')) {
+                                this.endRound('EMPATE TÁTICO!', 10);
+                            } else {
+                                this.playerTurn = false;
+                                this.statusMsg.setText('IA Oracle pensando... 🛡️');
+                                this.time.delayedCall(600, () => this.iaMove());
+                            }
+                        }
+                    });
+                    this.cells.push({ x: x, y: y });
+                }
+            }
+
+            makeMove(index, symbol) {
+                this.board[index] = symbol;
+                let pos = this.cells[index];
+                if (symbol === 'X') {
+                    this.add.circle(pos.x, pos.y, 18, 0x38bdf8);
+                    this.add.circle(pos.x, pos.y, 8, 0x090d16);
+                } else {
+                    let graphics = this.add.graphics();
+                    graphics.lineStyle(4, 0xef4444, 1);
+                    graphics.strokeRect(pos.x - 14, pos.y - 14, 28, 28);
+                }
+            }
+
+            iaMove() {
+                if (!this.isGameActive) return;
+
+                let move = this.getBestMove();
+                if (move !== -1) {
+                    this.makeMove(move, 'O');
+                    if (this.checkWin('O')) {
+                        this.endRound('ORACLE SYSTEM VENCEU! 🤖', 5);
+                    } else if (this.board.every(cell => cell !== '')) {
+                        this.endRound('EMPATE TÁTICO!', 10);
+                    } else {
+                        this.playerTurn = true;
+                        this.statusMsg.setText('Sua vez (🔵 Avançar)');
+                    }
+                }
+            }
+
+            getBestMove() {
+                for (let symbol of ['O', 'X']) {
+                    for (let i = 0; i < 9; i++) {
+                        if (this.board[i] === '') {
+                            this.board[i] = symbol;
+                            if (this.checkWin(symbol)) {
+                                this.board[i] = '';
+                                return i;
+                            }
+                            this.board[i] = '';
+                        }
+                    }
+                }
+                if (this.board[4] === '') return 4;
+
+                let empties = [];
+                this.board.forEach((val, idx) => { if (val === '') empties.push(idx); });
+                if (empties.length === 0) return -1;
+                return empties[Math.floor(Math.random() * empties.length)];
+            }
+
+            checkWin(symbol) {
+                const wins = [
+                    [0,1,2], [3,4,5], [6,7,8],
+                    [0,3,6], [1,4,7], [2,5,8],
+                    [0,4,8], [2,4,6]
+                ];
+                return wins.some(comb => comb.every(idx => this.board[idx] === symbol));
+            }
+
+            endRound(message, pointsEarned) {
+                this.isGameActive = false;
+                this.statusMsg.setText(message);
+                globalScore += pointsEarned;
+                document.getElementById('game-score').innerText = 'Placar: ' + globalScore;
+                this.cameras.main.flash(300, 2, 132, 199);
+                this.time.delayedCall(2000, () => {
+                    this.scene.restart();
+                });
+            }
+        }
+
+        // Configuração principal do Phaser
+        const config = {
+            type: Phaser.AUTO,
+            width: 400,
+            height: 320,
+            parent: 'game-container',
+            scene: [ChupetaEspacial, SuperMarioGYN, CarrinhoBebe, TicTacToeTactical]
+        };
+
+        const game = new Phaser.Game(config);
+
+        function switchGame(sceneKey, gameName, btnElement) {
+            if (globalScore > 0) {
+                saveHighScore(currentGameKey, globalScore);
+                globalScore = 0;
+                document.getElementById('game-score').innerText = 'Placar: 0';
+            }
+
+            currentGameKey = sceneKey;
+            currentGameName = gameName;
+
+            document.querySelectorAll('.arcade-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            game.scene.scenes.forEach(scene => {
+                if (scene.scene.isActive()) {
+                    scene.scene.stop();
+                }
+            });
+
+            game.scene.start(sceneKey);
+            updateRankingDisplay();
+        }
+
+        window.onload = () => {
+            initCounters();
+            renderMessages();
+            updateRankingDisplay();
+        };
+    </script>
+</body>
+</html>
+
