@@ -508,7 +508,7 @@
         <!-- Cabeçalho -->
         <header>
             <h1>Primeiros Momentos Douglas Moisés</h1>
-            <p>Seja Bem-Vindo | Base GYN (Versão 7.4)</p>
+            <p>Seja Bem-Vindo | Base GYN (Versão 7.5)</p>
         </header>
 
         <!-- Player de Música -->
@@ -526,7 +526,7 @@
             </div>
         </div>
 
-        <!-- Contadores (Zereados para contagem real) -->
+        <!-- Contadores -->
         <div class="counters-bar">
             <div>🟢 <span id="onlineCount">1</span> online agora</div>
             <div>👁️ <span id="visitCount">1</span> acessos</div>
@@ -556,19 +556,15 @@
                 <button class="admin-publish-btn" onclick="publishLiveCard()">Publicar Card ao Vivo</button>
 
                 <h4 style="margin-top:14px;">➕ Adicionar Momento na Gestação</h4>
-                <input type="text" id="momentDesc" placeholder="Descrição do momento (ex: 2º Ultrassom)">
-                <input type="text" id="momentImgUrl" placeholder="Link da foto do Momento">
+                <input type="text" id="momentDesc" placeholder="Descrição da foto/momento...">
+                <input type="text" id="momentImgUrl" placeholder="Link direto da imagem...">
                 <button class="admin-publish-btn" onclick="addNewMoment()">Adicionar Momento</button>
 
-                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;">💡 <i>Dica: Com o painel aberto, botões vermelhos aparecem nos cards para apagá-los com um clique!</i></p>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;">💡 <i>Dica: Com o painel aberto, botões vermelhos aparecem nos cards para apagá-los instantaneamente! O PIN configurado é 1926.</i></p>
             </div>
 
             <div class="live-feed" id="liveFeedContainer">
-                <div class="feed-card">
-                    <button class="delete-btn" onclick="this.parentElement.remove()">Apagar</button>
-                    <div class="time">Aguardando início dos procedimentos...</div>
-                    <p>Assim que sairmos para o hospital, as atualizações em tempo real aparecerão aqui!</p>
-                </div>
+                <!-- Carregado via script persistente -->
             </div>
         </section>
 
@@ -599,7 +595,7 @@
             </div>
         </section>
 
-        <!-- Mural de Recados (Zerado para receber comentários reais) -->
+        <!-- Mural de Recados -->
         <section>
             <h2>Mural de Recados</h2>
             <div class="chat-input-box">
@@ -611,9 +607,7 @@
             <button class="chat-submit" onclick="addMessage()">Enviar Recado</button>
             
             <div class="chat-messages" id="chatList">
-                <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 15px;">
-                    Nenhum recado enviado ainda. Seja o primeiro a deixar uma mensagem para o Douglas Moisés!
-                </div>
+                <!-- Carregado dinamicamente -->
             </div>
         </section>
 
@@ -621,28 +615,14 @@
         <section>
             <h2>Momentos da Gestação</h2>
             <div class="timeline-vertical" id="timelineContainer">
-                <div class="moment-card">
-                    <button class="delete-btn" onclick="this.parentElement.remove()">Apagar</button>
-                    <img src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=500&auto=format&fit=crop&q=60" alt="Teste">
-                    <p>O Descobrimento (O Teste Positivo)</p>
-                </div>
-                <div class="moment-card">
-                    <button class="delete-btn" onclick="this.parentElement.remove()">Apagar</button>
-                    <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=500&auto=format&fit=crop&q=60" alt="Ultrassom">
-                    <p>1º Ultrassom Oficial</p>
-                </div>
-                <div class="moment-card">
-                    <button class="delete-btn" onclick="this.parentElement.remove()">Apagar</button>
-                    <img src="https://images.unsplash.com/photo-1555252335-1e2e92c4bbf7?w=500&auto=format&fit=crop&q=60" alt="Barriga">
-                    <p>👶 Reta Final (A preparação do quartinho)</p>
-                </div>
+                <!-- Carregado dinamicamente com persistência -->
             </div>
         </section>
 
     </div>
 
     <footer>
-        Oraculo-Douglas-Moises-v7.4 © 2026 - Base de Operações GYN<br>Developed by Oráculo System
+        Oraculo-Douglas-Moises-v7.5 © 2026 - Base de Operações GYN<br>Developed by Oráculo System
     </footer>
 
     <audio id="bgMusic" loop>
@@ -650,23 +630,41 @@
     </audio>
 
     <script>
-        // Lógica de Contadores Reais com localStorage
-        function initCounters() {
-            let visits = localStorage.getItem('oraculo_visit_count');
-            if (!visits) {
-                visits = 1;
-            } else {
-                visits = parseInt(visits) + 1;
+        // Sistema de Persistência Inteligente & Central de Monitoramento v7.5
+        const STORAGE_KEYS = {
+            VISITS: 'oraculo_visit_count_v7',
+            LIVE_CARDS: 'oraculo_live_cards_v7',
+            MOMENTS: 'oraculo_moments_v7',
+            CHAT: 'oraculo_chat_messages_v7'
+        };
+
+        // Dados padrão iniciais para os Momentos da Gestação (Caso esteja vazio)
+        const defaultMoments = [
+            {
+                img: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=500&auto=format&fit=crop&q=60",
+                desc: "O Descobrimento (O Teste Positivo)"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=500&auto=format&fit=crop&q=60",
+                desc: "1º Ultrassom Oficial"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1555252335-1e2e92c4bbf7?w=500&auto=format&fit=crop&q=60",
+                desc: "👶 Reta Final (A preparação do quartinho)"
             }
-            localStorage.setItem('oraculo_visit_count', visits);
+        ];
+
+        function initCounters() {
+            let visits = localStorage.getItem(STORAGE_KEYS.VISITS);
+            visits = !visits ? 1 : parseInt(visits) + 1;
+            localStorage.setItem(STORAGE_KEYS.VISITS, visits);
             document.getElementById('visitCount').innerText = visits;
 
-            // Simulação dinâmica e limpa para usuários online
             let online = Math.floor(Math.random() * 3) + 1;
             document.getElementById('onlineCount').innerText = online;
         }
 
-        // Funções de Controle Administrativo (Painel do Operador)
+        // Funções de Controle Administrativo (PIN: 1926)
         let isAdminUnlocked = false;
         function requestAdminAccess() {
             let panel = document.getElementById('adminPanel');
@@ -687,6 +685,37 @@
             }
         }
 
+        // --- Gerenciamento de Cards ao Vivo ---
+        function loadLiveCards() {
+            let data = localStorage.getItem(STORAGE_KEYS.LIVE_CARDS);
+            return data ? JSON.parse(data) : [
+                { time: "Aguardando início dos procedimentos...", text: "Assim que sairmos para o hospital, as atualizações em tempo real aparecerão aqui!", img: "" }
+            ];
+        }
+
+        function saveLiveCards(cards) {
+            localStorage.setItem(STORAGE_KEYS.LIVE_CARDS, JSON.stringify(cards));
+        }
+
+        function renderLiveFeed() {
+            let feedContainer = document.getElementById('liveFeedContainer');
+            let cards = loadLiveCards();
+            feedContainer.innerHTML = '';
+
+            cards.forEach((item, index) => {
+                let card = document.createElement('div');
+                card.className = 'feed-card';
+                let imgHtml = item.img ? `<img src="${item.img}" alt="Parto">` : '';
+                card.innerHTML = `
+                    <button class="delete-btn" onclick="deleteLiveCard(${index})">Apagar</button>
+                    <div class="time">📡 ${item.time}</div>
+                    <p>${item.text}</p>
+                    ${imgHtml}
+                `;
+                feedContainer.appendChild(card);
+            });
+        }
+
         function publishLiveCard() {
             let text = document.getElementById('adminText').value.trim();
             let imgUrl = document.getElementById('adminImgUrl').value.trim();
@@ -694,68 +723,88 @@
 
             let now = new Date();
             let timeString = now.toLocaleDateString('pt-BR') + ' às ' + now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
-            let feedContainer = document.getElementById('liveFeedContainer');
             
-            if(feedContainer.innerHTML.includes("Aguardando início")) {
-                feedContainer.innerHTML = "";
+            let cards = loadLiveCards();
+            if(cards.length === 1 && cards[0].text.includes("Aguardando início")) {
+                cards = [];
             }
 
-            let card = document.createElement('div');
-            card.className = 'feed-card';
-            let imgHtml = imgUrl ? `<img src="${imgUrl}" alt="Parto">` : '';
-            card.innerHTML = `
-                <button class="delete-btn" onclick="this.parentElement.remove()">Apagar</button>
-                <div class="time">📡 ${timeString}</div>
-                <p>${text}</p>
-                ${imgHtml}
-            `;
-            feedContainer.prepend(card);
+            cards.unshift({ time: timeString, text: text, img: imgUrl });
+            saveLiveCards(cards);
+            renderLiveFeed();
+
             document.getElementById('adminText').value = '';
             document.getElementById('adminImgUrl').value = '';
-            alert("Card ao vivo publicado!");
+            alert("Card ao vivo publicado com sucesso!");
+        }
+
+        function deleteLiveCard(index) {
+            let cards = loadLiveCards();
+            cards.splice(index, 1);
+            if(cards.length === 0) {
+                cards.push({ time: "Aguardando início dos procedimentos...", text: "Assim que sairmos para o hospital, as atualizações em tempo real aparecerão aqui!", img: "" });
+            }
+            saveLiveCards(cards);
+            renderLiveFeed();
+        }
+
+        // --- Gerenciamento de Momentos da Gestação ---
+        function loadMoments() {
+            let data = localStorage.getItem(STORAGE_KEYS.MOMENTS);
+            return data ? JSON.parse(data) : defaultMoments;
+        }
+
+        function saveMoments(moments) {
+            localStorage.setItem(STORAGE_KEYS.MOMENTS, JSON.stringify(moments));
+        }
+
+        function renderMoments() {
+            let timeline = document.getElementById('timelineContainer');
+            let moments = loadMoments();
+            timeline.innerHTML = '';
+
+            moments.forEach((item, index) => {
+                let card = document.createElement('div');
+                card.className = 'moment-card';
+                card.innerHTML = `
+                    <button class="delete-btn" onclick="deleteMoment(${index})">Apagar</button>
+                    <img src="${item.img}" alt="Momento">
+                    <p>${item.desc}</p>
+                `;
+                timeline.appendChild(card);
+            });
         }
 
         function addNewMoment() {
             let desc = document.getElementById('momentDesc').value.trim();
             let imgUrl = document.getElementById('momentImgUrl').value.trim();
-            if(!desc || !imgUrl) return alert("Preencha a descrição e o link da foto!");
+            if(!desc || !imgUrl) return alert("Preencha a descrição e o link direto da foto!");
 
-            let timeline = document.getElementById('timelineContainer');
-            let card = document.createElement('div');
-            card.className = 'moment-card';
-            card.innerHTML = `
-                <button class="delete-btn" onclick="this.parentElement.remove()">Apagar</button>
-                <img src="${imgUrl}" alt="Momento">
-                <p>${desc}</p>
-            `;
-            timeline.prepend(card);
+            let moments = loadMoments();
+            moments.unshift({ img: imgUrl, desc: desc });
+            saveMoments(moments);
+            renderMoments();
+
             document.getElementById('momentDesc').value = '';
             document.getElementById('momentImgUrl').value = '';
-            alert("Momento adicionado com sucesso!");
+            alert("Novo momento adicionado e salvo na central!");
         }
 
-        let musicPlaying = false;
-        function toggleMusic() {
-            const music = document.getElementById('bgMusic');
-            const btn = document.getElementById('musicBtn');
-            if(!musicPlaying) {
-                music.play().catch(e => console.log(e));
-                btn.innerText = "🔊 Trilha Tocando (Parar)";
-                musicPlaying = true;
-            } else {
-                music.pause();
-                btn.innerText = "🎵 Tocar Trilha Sonora";
-                musicPlaying = false;
-            }
+        function deleteMoment(index) {
+            let moments = loadMoments();
+            moments.splice(index, 1);
+            saveMoments(moments);
+            renderMoments();
         }
 
+        // --- Mural de Recados ---
         function loadStoredMessages() {
-            let msgs = localStorage.getItem('oraculo_chat_messages');
+            let msgs = localStorage.getItem(STORAGE_KEYS.CHAT);
             return msgs ? JSON.parse(msgs) : [];
         }
 
         function saveStoredMessages(msgs) {
-            localStorage.setItem('oraculo_chat_messages', JSON.stringify(msgs));
+            localStorage.setItem(STORAGE_KEYS.CHAT, JSON.stringify(msgs));
         }
 
         function renderMessages() {
@@ -802,6 +851,21 @@
             msgs.splice(index, 1);
             saveStoredMessages(msgs);
             renderMessages();
+        }
+
+        let musicPlaying = false;
+        function toggleMusic() {
+            const music = document.getElementById('bgMusic');
+            const btn = document.getElementById('musicBtn');
+            if(!musicPlaying) {
+                music.play().catch(e => console.log(e));
+                btn.innerText = "🔊 Trilha Tocando (Parar)";
+                musicPlaying = true;
+            } else {
+                music.pause();
+                btn.innerText = "🎵 Tocar Trilha Sonora";
+                musicPlaying = false;
+            }
         }
 
         // Lógica Phaser para os Jogos
@@ -1458,7 +1522,6 @@
             }
         }
 
-        // Configuração principal do Phaser
         const config = {
             type: Phaser.AUTO,
             width: 400,
@@ -1494,6 +1557,8 @@
 
         window.onload = () => {
             initCounters();
+            renderLiveFeed();
+            renderMoments();
             renderMessages();
             updateRankingDisplay();
         };
