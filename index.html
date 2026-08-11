@@ -495,7 +495,7 @@
         <!-- Cabeçalho -->
         <header>
             <h1>Primeiros Momentos Douglas Moisés</h1>
-            <p>Seja Bem-Vindo | Base GYN (Versão 7.7)</p>
+            <p>Seja Bem-Vindo | Base GYN (Versão 7.8)</p>
         </header>
 
         <!-- Player de Música -->
@@ -525,7 +525,7 @@
             </div>
 
             <div class="live-feed" id="liveFeedContainer">
-                <!-- Conteúdo atualizado com o primeiro card ao vivo da espera -->
+                <!-- Conteúdo atualizado com os cards ao vivo mais recentes -->
             </div>
         </section>
 
@@ -583,7 +583,7 @@
     </div>
 
     <footer>
-        Oraculo-Douglas-Moises-v7.7 © 2026 - Base de Operações GYN<br>Developed by Oráculo System
+        Oraculo-Douglas-Moises-v7.8 © 2026 - Base de Operações GYN<br>Developed by Oráculo System
     </footer>
 
     <audio id="bgMusic" loop>
@@ -591,11 +591,11 @@
     </audio>
 
     <script>
-        // Sistema de Persistência Inteligente & Central de Monitoramento v7.7
+        // Sistema de Persistência Inteligente & Central de Monitoramento v7.8
         const STORAGE_KEYS = {
-            VISITS: 'oraculo_visit_count_v77',
-            MOMENTS: 'oraculo_moments_v77',
-            CHAT: 'oraculo_chat_messages_v77'
+            VISITS: 'oraculo_visit_count_v78',
+            MOMENTS: 'oraculo_moments_v78',
+            CHAT: 'oraculo_chat_messages_v78'
         };
 
         // Dados cronológicos da gestação
@@ -640,10 +640,20 @@
             document.getElementById('onlineCount').innerText = online;
         }
 
-        // --- Transmissão ao Vivo / Sala de Espera (Card Inicial com a foto nova) ---
+        // --- Transmissão ao Vivo (Cards Recentes no Início) ---
         function renderLiveFeed() {
             let feedContainer = document.getElementById('liveFeedContainer');
             feedContainer.innerHTML = `
+                <div class="feed-card">
+                    <div class="time">📡 11/08/2026 - 00:04 | Mamãe na Sala de Parto</div>
+                    <p>A mamãe já está na sala de parto, firme e forte, pronta para receber o nosso grande amor. Cada segundo nos aproxima do momento mais esperado!</p>
+                    <img src="https://i.ibb.co/gMkh2mwW/20260811-000424.jpg" alt="Mamãe na Sala de Parto - Base GYN">
+                </div>
+                <div class="feed-card">
+                    <div class="time">📡 10/08/2026 - 23:55 | Papai se Preparando</div>
+                    <p>O papai já está paramentado e a postos, preparando tudo com o coração acelerado para a chegada do pequeno Douglas Moisés. Reta final!</p>
+                    <img src="https://i.ibb.co/WpfmfrkT/20260810-235556.jpg" alt="Papai se preparando para a chegada - Base GYN">
+                </div>
                 <div class="feed-card">
                     <div class="time">📡 10/08/2026 - 23:41 | Na Sala de Espera da Maternidade</div>
                     <p>Chegamos na maternidade! Estamos aguardando com o coração cheio de alegria e expectativa a chegada do Douglas Moisés. Acompanhem por aqui as próximas atualizações!</p>
