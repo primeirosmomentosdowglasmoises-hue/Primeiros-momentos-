@@ -227,7 +227,7 @@
 
         .feed-card img {
             width: 100%;
-            max-height: 220px;
+            max-height: 320px;
             object-fit: cover;
             border-radius: 6px;
             margin-top: 6px;
@@ -495,7 +495,7 @@
         <!-- Cabeçalho -->
         <header>
             <h1>Primeiros Momentos Douglas Moisés</h1>
-            <p>Seja Bem-Vindo | Base GYN (Versão 7.6)</p>
+            <p>Seja Bem-Vindo | Base GYN (Versão 7.7)</p>
         </header>
 
         <!-- Player de Música -->
@@ -522,11 +522,10 @@
         <section>
             <div class="section-header">
                 <h2>📡 Transmissão ao Vivo (Parto)</h2>
-                <!-- Engrenagem e Painel de Admin removidos conforme solicitado -->
             </div>
 
             <div class="live-feed" id="liveFeedContainer">
-                <!-- Conteúdo estático atualizado -->
+                <!-- Conteúdo atualizado com o primeiro card ao vivo da espera -->
             </div>
         </section>
 
@@ -584,7 +583,7 @@
     </div>
 
     <footer>
-        Oraculo-Douglas-Moises-v7.6 © 2026 - Base de Operações GYN<br>Developed by Oráculo System
+        Oraculo-Douglas-Moises-v7.7 © 2026 - Base de Operações GYN<br>Developed by Oráculo System
     </footer>
 
     <audio id="bgMusic" loop>
@@ -592,14 +591,14 @@
     </audio>
 
     <script>
-        // Sistema de Persistência Inteligente & Central de Monitoramento v7.6
+        // Sistema de Persistência Inteligente & Central de Monitoramento v7.7
         const STORAGE_KEYS = {
-            VISITS: 'oraculo_visit_count_v76',
-            MOMENTS: 'oraculo_moments_v76',
-            CHAT: 'oraculo_chat_messages_v76'
+            VISITS: 'oraculo_visit_count_v77',
+            MOMENTS: 'oraculo_moments_v77',
+            CHAT: 'oraculo_chat_messages_v77'
         };
 
-        // Dados ordenados exatamente conforme solicitado pelo Operador (cronologia perfeita da gestação)
+        // Dados cronológicos da gestação
         const defaultMoments = [
             {
                 img: "https://i.ibb.co/M5n4SSsd/20260809-174616.jpg",
@@ -618,12 +617,12 @@
                 desc: "Foto ultrassom do oitavo mês. O nosso campeão crescendo forte!"
             },
             {
-                img: "https://i.ibb.co/jn5rWrD/1786310495378.png",
-                desc: "O último ultrassom, rostinho bem formado. Esperando o bebê nascer já!"
-            },
-            {
                 img: "https://i.ibb.co/fLVknXY/1786310471704.png",
                 desc: "Foto ultrassom: rostinho do bebê em detalhes maravilhosos."
+            },
+            {
+                img: "https://i.ibb.co/jn5rWrD/1786310495378.png",
+                desc: "O último ultrassom, rostinho bem formado. Esperando o bebê nascer já!"
             },
             {
                 img: "https://i.ibb.co/8LzPFvZP/1786310975973.png",
@@ -641,13 +640,14 @@
             document.getElementById('onlineCount').innerText = online;
         }
 
-        // --- Transmissão ao Vivo Fixa ---
+        // --- Transmissão ao Vivo / Sala de Espera (Card Inicial com a foto nova) ---
         function renderLiveFeed() {
             let feedContainer = document.getElementById('liveFeedContainer');
             feedContainer.innerHTML = `
                 <div class="feed-card">
-                    <div class="time">📡 Saindo para Maternidade</div>
-                    <p>Logo mais vocês verão novas fotos do nenê, assim que ele estiver na sala do parto. Daí para frente postaremos atualizações aqui. Não perca!</p>
+                    <div class="time">📡 10/08/2026 - 23:41 | Na Sala de Espera da Maternidade</div>
+                    <p>Chegamos na maternidade! Estamos aguardando com o coração cheio de alegria e expectativa a chegada do Douglas Moisés. Acompanhem por aqui as próximas atualizações!</p>
+                    <img src="https://i.ibb.co/0p5V59WJ/20260810-234140.jpg" alt="Esperando na Maternidade - Base GYN">
                 </div>
             `;
         }
