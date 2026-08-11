@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Primeiros Momentos - Douglas Moisés | Base GYN</title>
-    <!-- Framework Phaser para os Mini-Jogos -->
+    <title>Nasceu! Douglas Moisés - Base GYN</title>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
     <style>
         :root {
-            --bg-sky-top: #3a98e9;
-            --bg-sky-bottom: #bce1ff;
-            --card-bg: rgba(255, 255, 255, 0.92);
-            --accent-blue: #0277bd;
-            --accent-baby: #4fc3f7;
-            --accent-gold: #ffb300;
-            --text-main: #1a365d;
-            --text-muted: #4a5568;
-            --danger-red: #e53935;
+            --bg-sky-top: #1e3a8a;
+            --bg-sky-bottom: #38bdf8;
+            --card-bg: rgba(255, 255, 255, 0.94);
+            --accent-blue: #0284c7;
+            --accent-baby: #38bdf8;
+            --accent-gold: #f59e0b;
+            --text-main: #0f172a;
+            --text-muted: #334155;
+            --danger-red: #ef4444;
             --primary-blue: #0284c7;
             --dark-blue: #0369a1;
         }
@@ -92,24 +91,27 @@
 
         header {
             width: 100%;
-            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            background: linear-gradient(135deg, #0284c7, #1e3a8a);
             color: white;
-            padding: 20px;
+            padding: 22px;
             text-align: center;
-            border-radius: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 16px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+            border: 2px solid #38bdf8;
         }
 
         header h1 {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             margin-bottom: 5px;
             text-transform: uppercase;
             letter-spacing: 1px;
+            color: #fde047;
         }
 
         header p {
-            font-size: 0.9rem;
-            opacity: 0.9;
+            font-size: 0.95rem;
+            opacity: 0.95;
+            font-weight: 600;
         }
 
         .music-banner {
@@ -144,7 +146,7 @@
             display: flex;
             justify-content: space-between;
             font-size: 0.8rem;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             padding: 8px 14px;
             border-radius: 8px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.08);
@@ -175,18 +177,10 @@
         }
 
         .section-header h2 {
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             color: var(--accent-blue);
             text-transform: uppercase;
             margin: 0;
-        }
-
-        .gear-btn {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: var(--text-muted);
         }
 
         .intro-text {
@@ -204,11 +198,11 @@
 
         .feed-card {
             background: #ffffff;
-            border-left: 3px solid var(--accent-blue);
+            border-left: 3px solid #f59e0b;
             padding: 12px;
             border-radius: 8px;
             border: 1px solid rgba(0,0,0,0.04);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
             position: relative;
         }
 
@@ -223,77 +217,15 @@
             font-size: 0.85rem;
             color: var(--text-main);
             margin-bottom: 6px;
+            font-weight: 600;
         }
 
         .feed-card img {
             width: 100%;
-            max-height: 320px;
+            max-height: 380px;
             object-fit: cover;
             border-radius: 6px;
             margin-top: 6px;
-        }
-
-        /* Painel Admin / Engrenagem */
-        #adminPanel {
-            display: none;
-            background: #e1f5fe;
-            border: 1px dashed var(--accent-blue);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
-
-        #adminPanel h4 {
-            font-size: 0.85rem;
-            color: var(--accent-blue);
-            margin-bottom: 6px;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-
-        #adminPanel h4:first-child {
-            margin-top: 0;
-        }
-
-        #adminPanel input, #adminPanel textarea {
-            width: 100%;
-            background: #ffffff;
-            border: 1px solid rgba(0,0,0,0.1);
-            padding: 8px;
-            border-radius: 6px;
-            color: var(--text-main);
-            font-size: 0.8rem;
-            margin-bottom: 8px;
-        }
-
-        .admin-publish-btn {
-            background: var(--accent-blue);
-            color: #fff;
-            border: none;
-            padding: 6px 12px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            width: 100%;
-        }
-
-        .delete-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: var(--danger-red);
-            color: white;
-            border: none;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            display: none;
-        }
-
-        .admin-mode .delete-btn {
-            display: inline-block;
         }
 
         /* Fliperama Arcade Phaser */
@@ -484,7 +416,6 @@
 </head>
 <body>
 
-    <!-- Container de Nuvens Animadas em Parallax -->
     <div class="clouds-container">
         <div class="cloud c1"></div>
         <div class="cloud c2"></div>
@@ -492,47 +423,40 @@
 
     <div class="container">
         
-        <!-- Cabeçalho -->
         <header>
-            <h1>Primeiros Momentos Douglas Moisés</h1>
-            <p>Seja Bem-Vindo | Base GYN (Versão 7.8)</p>
+            <h1>O DOUGLAS MOISÉS NASCEU! 🎉</h1>
+            <p>Base GYN | Versão 7.9 (Edição Nascimento)</p>
         </header>
 
-        <!-- Player de Música -->
         <div class="music-banner">
             <button onclick="toggleMusic()" id="musicBtn">🎵 Tocar Trilha Sonora</button>
-            <p>Toque para acompanhar com música suave</p>
+            <p>Toque para celebrar a chegada do nosso príncipe</p>
         </div>
 
-        <!-- Contadores -->
         <div class="counters-bar">
             <div>🟢 <span id="onlineCount">1</span> online agora</div>
             <div>👁️ <span id="visitCount">1</span> acessos</div>
         </div>
 
-        <!-- Boas Vindas -->
         <section>
-            <h2>Boas-Vindas, Família!</h2>
+            <h2>O Grande Momento Chegou!</h2>
             <p class="intro-text">
-                Criamos este espaço para compartilhar cada detalhe da chegada do <strong>Douglas Moisés</strong>, nosso terceiro filho. Muito obrigado a todos que nos apoiaram nos preparativos e na montagem do quartinho!
+                Com imensa alegria e gratidão a Deus, anunciamos o nascimento do <strong>Douglas Moisés</strong>! Mamãe e o bebê passam bem. Obrigado a toda a família e amigos pelo carinho e torcida nesta jornada inesquecível!
             </p>
         </section>
 
-        <!-- Transmissão ao Vivo -->
         <section>
             <div class="section-header">
-                <h2>📡 Transmissão ao Vivo (Parto)</h2>
+                <h2>🍼 Primeiras Horas de Vida & Chegada</h2>
             </div>
 
             <div class="live-feed" id="liveFeedContainer">
-                <!-- Conteúdo atualizado com os cards ao vivo mais recentes -->
-            </div>
+                </div>
         </section>
 
-        <!-- Sala de Espera / Fliperama Arcade com Phaser -->
         <section class="arcade-section">
             <div class="arcade-header">
-                <h3 id="current-game-title">🕹️ Fliperama da Sala de Espera</h3>
+                <h3 id="current-game-title">🕹️ Fliperama da Celebração</h3>
                 <span id="game-score" style="color: var(--accent-gold); font-weight: bold;">Placar: 0</span>
             </div>
 
@@ -544,46 +468,39 @@
             </div>
 
             <div id="game-container">
-                <!-- Canvas do Phaser -->
-            </div>
+                </div>
 
-            <!-- Painel de Records Modulares -->
             <div class="ranking-section">
                 <h4 id="ranking-title">🏆 Top 10 Melhores: Chupeta Espacial (Base GYN)</h4>
                 <ul id="ranking-list">
-                    <!-- Carregado via Script -->
-                </ul>
+                    </ul>
             </div>
         </section>
 
-        <!-- Mural de Recados -->
         <section>
             <h2>Mural de Recados</h2>
             <div class="chat-input-box">
                 <input type="text" id="senderName" placeholder="Seu Nome / Família">
             </div>
             <div class="chat-input-box">
-                <textarea id="senderMsg" rows="2" placeholder="Deixe seu recado para o Douglas..."></textarea>
+                <textarea id="senderMsg" rows="2" placeholder="Deixe sua mensagem para o recém-nascido Douglas..."></textarea>
             </div>
             <button class="chat-submit" onclick="addMessage()">Enviar Recado</button>
             
             <div class="chat-messages" id="chatList">
-                <!-- Carregado dinamicamente -->
-            </div>
+                </div>
         </section>
 
-        <!-- Momentos da Gestação (Feed Vertical) -->
         <section>
-            <h2>Momentos da Gestação</h2>
+            <h2>Histórico e Memórias</h2>
             <div class="timeline-vertical" id="timelineContainer">
-                <!-- Carregado dinamicamente com persistência -->
-            </div>
+                </div>
         </section>
 
     </div>
 
     <footer>
-        Oraculo-Douglas-Moises-v7.8 © 2026 - Base de Operações GYN<br>Developed by Oráculo System
+        Oraculo-Douglas-Moises-v7.9 © 2026 - Base de Operações GYN<br>Developed by Oráculo System
     </footer>
 
     <audio id="bgMusic" loop>
@@ -591,14 +508,14 @@
     </audio>
 
     <script>
-        // Sistema de Persistência Inteligente & Central de Monitoramento v7.8
+        // Sistema de Persistência Inteligente & Central de Monitoramento v7.9
         const STORAGE_KEYS = {
-            VISITS: 'oraculo_visit_count_v78',
-            MOMENTS: 'oraculo_moments_v78',
-            CHAT: 'oraculo_chat_messages_v78'
+            VISITS: 'oraculo_visit_count_v79',
+            MOMENTS: 'oraculo_moments_v79',
+            CHAT: 'oraculo_chat_messages_v79'
         };
 
-        // Dados cronológicos da gestação
+        // Dados cronológicos da gestação até o nascimento
         const defaultMoments = [
             {
                 img: "https://i.ibb.co/M5n4SSsd/20260809-174616.jpg",
@@ -617,10 +534,6 @@
                 desc: "Foto ultrassom do oitavo mês. O nosso campeão crescendo forte!"
             },
             {
-                img: "https://i.ibb.co/fLVknXY/1786310471704.png",
-                desc: "Foto ultrassom: rostinho do bebê em detalhes maravilhosos."
-            },
-            {
                 img: "https://i.ibb.co/jn5rWrD/1786310495378.png",
                 desc: "O último ultrassom, rostinho bem formado. Esperando o bebê nascer já!"
             },
@@ -636,28 +549,34 @@
             localStorage.setItem(STORAGE_KEYS.VISITS, visits);
             document.getElementById('visitCount').innerText = visits;
 
-            let online = Math.floor(Math.random() * 3) + 1;
+            let online = Math.floor(Math.random() * 3) + 2;
             document.getElementById('onlineCount').innerText = online;
         }
 
-        // --- Transmissão ao Vivo (Cards Recentes no Início) ---
+        // --- Transmissão ao Vivo e Nascimento ---
         function renderLiveFeed() {
             let feedContainer = document.getElementById('liveFeedContainer');
             feedContainer.innerHTML = `
                 <div class="feed-card">
-                    <div class="time">📡 11/08/2026 - 00:04 | Mamãe na Sala de Parto</div>
-                    <p>A mamãe já está na sala de parto, firme e forte, pronta para receber o nosso grande amor. Cada segundo nos aproxima do momento mais esperado!</p>
-                    <img src="https://i.ibb.co/gMkh2mwW/20260811-000424.jpg" alt="Mamãe na Sala de Parto - Base GYN">
+                    <div class="time">🍼 11/08/2026 - 01:34 | Querendo Mama</div>
+                    <p>Olha só quem já está com fome e querendo mama! Douglas Moisés esbanjando charme e energia logo após o nascimento.</p>
+                    <img src="https://i.ibb.co/JRRh8r4S/20260811-013441.jpg" alt="Douglas Moisés querendo mama">
                 </div>
                 <div class="feed-card">
-                    <div class="time">📡 10/08/2026 - 23:55 | Papai se Preparando</div>
-                    <p>O papai já está paramentado e a postos, preparando tudo com o coração acelerado para a chegada do pequeno Douglas Moisés. Reta final!</p>
-                    <img src="https://i.ibb.co/WpfmfrkT/20260810-235556.jpg" alt="Papai se preparando para a chegada - Base GYN">
+                    <div class="time">🍼 11/08/2026 - 01:32 | Primeiros Registros do Douglas Moisés</div>
+                    <p>Momentos mágicos: As primeiras fotos oficiais do nosso pequeno Douglas Moisés, lindo e saudável!</p>
+                    <img src="https://i.ibb.co/xqbVvXWQ/20260811-013221.jpg" alt="Primeira foto do Douglas Moisés">
+                    <img src="https://i.ibb.co/pBkg5gjt/20260811-013210.jpg" alt="Foto do Douglas Moisés">
                 </div>
                 <div class="feed-card">
-                    <div class="time">📡 10/08/2026 - 23:41 | Na Sala de Espera da Maternidade</div>
-                    <p>Chegamos na maternidade! Estamos aguardando com o coração cheio de alegria e expectativa a chegada do Douglas Moisés. Acompanhem por aqui as próximas atualizações!</p>
-                    <img src="https://i.ibb.co/0p5V59WJ/20260810-234140.jpg" alt="Esperando na Maternidade - Base GYN">
+                    <div class="time">🍼 11/08/2026 - 01:27 | Douglas com a Mamãe</div>
+                    <p>O primeiro encontro nos braços da mamãe. Amor incondicional e muita emoção na sala de parto!</p>
+                    <img src="https://i.ibb.co/Zz1FJvJF/20260811-012752.jpg" alt="Douglas com a mamãe">
+                </div>
+                <div class="feed-card">
+                    <div class="time">📡 11/08/2026 - 00:42 | Papai e Mamãe Juntos na Chegada</div>
+                    <p>União e cumplicidade total do papai e da mamãe celebrando a chegada do nosso pacotinho de amor.</p>
+                    <img src="https://i.ibb.co/JWhLJpRQ/20260811-004254.jpg" alt="Papai e mamãe na sala de parto">
                 </div>
             `;
         }
@@ -705,7 +624,7 @@
             if (msgs.length === 0) {
                 chatList.innerHTML = `
                     <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 15px;">
-                        Nenhum recado enviado ainda. Seja o primeiro a deixar uma mensagem para o Douglas Moisés!
+                        Nenhum recado enviado ainda. Seja o primeiro a parabenizar a chegada do Douglas Moisés!
                     </div>
                 `;
                 return;
@@ -1456,3 +1375,4 @@
     </script>
 </body>
 </html>
+
