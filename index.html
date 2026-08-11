@@ -140,19 +140,6 @@
             font-weight: 600;
         }
 
-        .status-box {
-            background: linear-gradient(135deg, #fef3c7, #fde047);
-            border-left: 6px solid #d97706;
-            padding: 15px;
-            border-radius: 12px;
-            font-weight: bold;
-            color: #78350f;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
         .counters-bar {
             display: flex;
             justify-content: space-between;
@@ -470,7 +457,7 @@
 
         .moment-card img {
             width: 100%;
-            max-height: 280px;
+            max-height: 320px;
             object-fit: cover;
             background: #eef5fc;
         }
@@ -508,22 +495,13 @@
         <!-- Cabeçalho -->
         <header>
             <h1>Primeiros Momentos Douglas Moisés</h1>
-            <p>Seja Bem-Vindo | Base GYN (Versão 7.5)</p>
+            <p>Seja Bem-Vindo | Base GYN (Versão 7.6)</p>
         </header>
 
         <!-- Player de Música -->
         <div class="music-banner">
             <button onclick="toggleMusic()" id="musicBtn">🎵 Tocar Trilha Sonora</button>
             <p>Toque para acompanhar com música suave</p>
-        </div>
-
-        <!-- Status Operacional -->
-        <div class="status-box">
-            <span>🚨</span>
-            <div>
-                <div>STATUS OPERACIONAL: AGUARDANDO A BOLSA ESTOURAR</div>
-                <div style="font-size: 0.85rem; font-weight: normal; margin-top: 3px;">Acompanhe em tempo real os preparativos do nosso herdeiro!</div>
-            </div>
         </div>
 
         <!-- Contadores -->
@@ -544,27 +522,11 @@
         <section>
             <div class="section-header">
                 <h2>📡 Transmissão ao Vivo (Parto)</h2>
-                <button class="gear-btn" onclick="requestAdminAccess()" title="Painel do Operador">⚙️</button>
-            </div>
-
-            <div id="adminPanel">
-                <p style="font-size:0.8rem; color:var(--accent-blue); margin-bottom:8px; font-weight:bold;">🔐 Painel Restrito do Operador (Manutenção Visual)</p>
-                
-                <h4>➕ Publicar Card ao Vivo</h4>
-                <textarea id="adminText" rows="2" placeholder="Digite o status / novidade do parto..."></textarea>
-                <input type="text" id="adminImgUrl" placeholder="Link da foto do Card (Opcional)">
-                <button class="admin-publish-btn" onclick="publishLiveCard()">Publicar Card ao Vivo</button>
-
-                <h4 style="margin-top:14px;">➕ Adicionar Momento na Gestação</h4>
-                <input type="text" id="momentDesc" placeholder="Descrição da foto/momento...">
-                <input type="text" id="momentImgUrl" placeholder="Link direto da imagem...">
-                <button class="admin-publish-btn" onclick="addNewMoment()">Adicionar Momento</button>
-
-                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;">💡 <i>Dica: Com o painel aberto, botões vermelhos aparecem nos cards para apagá-los instantaneamente! O PIN configurado é 1926.</i></p>
+                <!-- Engrenagem e Painel de Admin removidos conforme solicitado -->
             </div>
 
             <div class="live-feed" id="liveFeedContainer">
-                <!-- Carregado via script persistente -->
+                <!-- Conteúdo estático atualizado -->
             </div>
         </section>
 
@@ -622,7 +584,7 @@
     </div>
 
     <footer>
-        Oraculo-Douglas-Moises-v7.5 © 2026 - Base de Operações GYN<br>Developed by Oráculo System
+        Oraculo-Douglas-Moises-v7.6 © 2026 - Base de Operações GYN<br>Developed by Oráculo System
     </footer>
 
     <audio id="bgMusic" loop>
@@ -630,27 +592,42 @@
     </audio>
 
     <script>
-        // Sistema de Persistência Inteligente & Central de Monitoramento v7.5
+        // Sistema de Persistência Inteligente & Central de Monitoramento v7.6
         const STORAGE_KEYS = {
-            VISITS: 'oraculo_visit_count_v7',
-            LIVE_CARDS: 'oraculo_live_cards_v7',
-            MOMENTS: 'oraculo_moments_v7',
-            CHAT: 'oraculo_chat_messages_v7'
+            VISITS: 'oraculo_visit_count_v76',
+            MOMENTS: 'oraculo_moments_v76',
+            CHAT: 'oraculo_chat_messages_v76'
         };
 
-        // Dados padrão iniciais para os Momentos da Gestação (Caso esteja vazio)
+        // Dados ordenados exatamente conforme solicitado pelo Operador (cronologia perfeita da gestação)
         const defaultMoments = [
             {
-                img: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=500&auto=format&fit=crop&q=60",
-                desc: "O Descobrimento (O Teste Positivo)"
+                img: "https://i.ibb.co/M5n4SSsd/20260809-174616.jpg",
+                desc: "O teste positivo. A confirmação de uma grande bênção!"
             },
             {
-                img: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=500&auto=format&fit=crop&q=60",
-                desc: "1º Ultrassom Oficial"
+                img: "https://i.ibb.co/CpVTR8by/1786310461171.png",
+                desc: "Primeiro ultrassom confirmação. Só alegria e muita expectativa!"
             },
             {
-                img: "https://images.unsplash.com/photo-1555252335-1e2e92c4bbf7?w=500&auto=format&fit=crop&q=60",
-                desc: "👶 Reta Final (A preparação do quartinho)"
+                img: "https://i.ibb.co/21wyZMyS/20260809-175531.jpg",
+                desc: "Também do primeiro ultrassom confirmado. Emoção sem fim!"
+            },
+            {
+                img: "https://i.ibb.co/4nzzXmxJ/1786310466492.png",
+                desc: "Foto ultrassom do oitavo mês. O nosso campeão crescendo forte!"
+            },
+            {
+                img: "https://i.ibb.co/jn5rWrD/1786310495378.png",
+                desc: "O último ultrassom, rostinho bem formado. Esperando o bebê nascer já!"
+            },
+            {
+                img: "https://i.ibb.co/fLVknXY/1786310471704.png",
+                desc: "Foto ultrassom: rostinho do bebê em detalhes maravilhosos."
+            },
+            {
+                img: "https://i.ibb.co/8LzPFvZP/1786310975973.png",
+                desc: "Foto da mamãe com a barriga linda, irradiando amor e carinho!"
             }
         ];
 
@@ -664,88 +641,15 @@
             document.getElementById('onlineCount').innerText = online;
         }
 
-        // Funções de Controle Administrativo (PIN: 1926)
-        let isAdminUnlocked = false;
-        function requestAdminAccess() {
-            let panel = document.getElementById('adminPanel');
-            let body = document.getElementById('mainBody');
-            if(isAdminUnlocked) {
-                panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-                body.classList.toggle('admin-mode');
-                return;
-            }
-            let pass = prompt("🔐 Insira o PIN de Acesso do Operador:");
-            if(pass === "1926") {
-                isAdminUnlocked = true;
-                panel.style.display = 'block';
-                body.classList.add('admin-mode');
-                alert("Acesso Liberado, Operador! Botões de apagar ativados.");
-            } else if(pass !== null) {
-                alert("Senha incorreta!");
-            }
-        }
-
-        // --- Gerenciamento de Cards ao Vivo ---
-        function loadLiveCards() {
-            let data = localStorage.getItem(STORAGE_KEYS.LIVE_CARDS);
-            return data ? JSON.parse(data) : [
-                { time: "Aguardando início dos procedimentos...", text: "Assim que sairmos para o hospital, as atualizações em tempo real aparecerão aqui!", img: "" }
-            ];
-        }
-
-        function saveLiveCards(cards) {
-            localStorage.setItem(STORAGE_KEYS.LIVE_CARDS, JSON.stringify(cards));
-        }
-
+        // --- Transmissão ao Vivo Fixa ---
         function renderLiveFeed() {
             let feedContainer = document.getElementById('liveFeedContainer');
-            let cards = loadLiveCards();
-            feedContainer.innerHTML = '';
-
-            cards.forEach((item, index) => {
-                let card = document.createElement('div');
-                card.className = 'feed-card';
-                let imgHtml = item.img ? `<img src="${item.img}" alt="Parto">` : '';
-                card.innerHTML = `
-                    <button class="delete-btn" onclick="deleteLiveCard(${index})">Apagar</button>
-                    <div class="time">📡 ${item.time}</div>
-                    <p>${item.text}</p>
-                    ${imgHtml}
-                `;
-                feedContainer.appendChild(card);
-            });
-        }
-
-        function publishLiveCard() {
-            let text = document.getElementById('adminText').value.trim();
-            let imgUrl = document.getElementById('adminImgUrl').value.trim();
-            if(!text) return alert("Digite alguma atualização!");
-
-            let now = new Date();
-            let timeString = now.toLocaleDateString('pt-BR') + ' às ' + now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
-            
-            let cards = loadLiveCards();
-            if(cards.length === 1 && cards[0].text.includes("Aguardando início")) {
-                cards = [];
-            }
-
-            cards.unshift({ time: timeString, text: text, img: imgUrl });
-            saveLiveCards(cards);
-            renderLiveFeed();
-
-            document.getElementById('adminText').value = '';
-            document.getElementById('adminImgUrl').value = '';
-            alert("Card ao vivo publicado com sucesso!");
-        }
-
-        function deleteLiveCard(index) {
-            let cards = loadLiveCards();
-            cards.splice(index, 1);
-            if(cards.length === 0) {
-                cards.push({ time: "Aguardando início dos procedimentos...", text: "Assim que sairmos para o hospital, as atualizações em tempo real aparecerão aqui!", img: "" });
-            }
-            saveLiveCards(cards);
-            renderLiveFeed();
+            feedContainer.innerHTML = `
+                <div class="feed-card">
+                    <div class="time">📡 Saindo para Maternidade</div>
+                    <p>Logo mais vocês verão novas fotos do nenê, assim que ele estiver na sala do parto. Daí para frente postaremos atualizações aqui. Não perca!</p>
+                </div>
+            `;
         }
 
         // --- Gerenciamento de Momentos da Gestação ---
@@ -763,38 +667,15 @@
             let moments = loadMoments();
             timeline.innerHTML = '';
 
-            moments.forEach((item, index) => {
+            moments.forEach((item) => {
                 let card = document.createElement('div');
                 card.className = 'moment-card';
                 card.innerHTML = `
-                    <button class="delete-btn" onclick="deleteMoment(${index})">Apagar</button>
-                    <img src="${item.img}" alt="Momento">
-                    <p>${item.desc}</p>
+                    <img src="${item.img}" alt="Momento da Gestação">
+                    <p>❤️ ${item.desc}</p>
                 `;
                 timeline.appendChild(card);
             });
-        }
-
-        function addNewMoment() {
-            let desc = document.getElementById('momentDesc').value.trim();
-            let imgUrl = document.getElementById('momentImgUrl').value.trim();
-            if(!desc || !imgUrl) return alert("Preencha a descrição e o link direto da foto!");
-
-            let moments = loadMoments();
-            moments.unshift({ img: imgUrl, desc: desc });
-            saveMoments(moments);
-            renderMoments();
-
-            document.getElementById('momentDesc').value = '';
-            document.getElementById('momentImgUrl').value = '';
-            alert("Novo momento adicionado e salvo na central!");
-        }
-
-        function deleteMoment(index) {
-            let moments = loadMoments();
-            moments.splice(index, 1);
-            saveMoments(moments);
-            renderMoments();
         }
 
         // --- Mural de Recados ---
@@ -1565,4 +1446,3 @@
     </script>
 </body>
 </html>
-
